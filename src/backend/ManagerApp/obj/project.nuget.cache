@@ -1,0 +1,11 @@
+{
+  "version": 2,
+  "dgSpecHash": "BFIb/EI/Ou4=",
+  "success": true,
+  "projectFilePath": "/home/pasha/Documents/Work/warehouse-manager/src/backend/ManagerApp/ManagerApp.csproj",
+  "expectedPackageFiles": [
+    "/home/pasha/.nuget/packages/microsoft.aspnetcore.openapi/9.0.6/microsoft.aspnetcore.openapi.9.0.6.nupkg.sha512",
+    "/home/pasha/.nuget/packages/microsoft.openapi/1.6.17/microsoft.openapi.1.6.17.nupkg.sha512"
+  ],
+  "logs": []
+}
