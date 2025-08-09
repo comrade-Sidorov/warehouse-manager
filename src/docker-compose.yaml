@@ -23,4 +23,4 @@ services:
       resources:
         limits:
           memory: 512m
-          cpus: '0.1'
+          cpus: '0.15'
