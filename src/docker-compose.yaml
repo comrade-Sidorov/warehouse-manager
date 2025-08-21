@@ -24,3 +24,21 @@ services:
         limits:
           memory: 512m
           cpus: '0.15'
+  
+  db:
+    container_name: db
+    image: postgres:latest
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: postgres_user
+      POSTGRES_PASSWORD: qwert123
+      POSTGRES_DB: postgres_db
+    deploy:
+      resources:
+        limits:
+          cpus: '0.50'
+          memory: 512M
+        reservations:
+          cpus: '0.25'
+          memory: 256M
