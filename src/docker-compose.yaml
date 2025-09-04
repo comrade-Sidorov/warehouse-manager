@@ -1,8 +1,8 @@
 services:
-  backend:
-    container_name: back
+  backend-api:
+    container_name: back-api
     build:
-      context: ./backend
+      context: ./backend/Warehouse.Api
       dockerfile: Dockerfile
     ports:
       - 8080:8080

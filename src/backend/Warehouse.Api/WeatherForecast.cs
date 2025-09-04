@@ -1,4 +1,4 @@
-namespace backend;
+namespace Warehouse.Api;
 
 public class WeatherForecast
 {

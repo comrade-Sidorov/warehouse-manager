@@ -12,4 +12,4 @@ RUN dotnet publish -o out
 FROM mcr.microsoft.com/dotnet/aspnet:9.0
 WORKDIR /App
 COPY --from=build /App/out .
-ENTRYPOINT ["dotnet", "backend.dll"]
+ENTRYPOINT ["dotnet", "Warehouse.Api.dll"]
