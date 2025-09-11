@@ -4,3 +4,4 @@ GET {{Warehouse.Api_HostAddress}}/weatherforecast/
 Accept: application/json
 
 ###
+GET {{Warehouse.Api_HostAddress}}/test/test

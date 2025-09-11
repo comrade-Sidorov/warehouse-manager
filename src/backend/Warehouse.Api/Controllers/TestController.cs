@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Warehouse.Api.Controllers;
 
-
+[ApiController]
 [Route("[controller]")]
 public class Test : ControllerBase
 {
