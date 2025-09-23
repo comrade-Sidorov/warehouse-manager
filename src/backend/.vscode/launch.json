@@ -1,0 +1,36 @@
+{
+    "configurations": [
+        {
+            "name": "warehouse-dal",
+            "type": "dotnet",
+            "request": "launch",
+            "projectPath": "${workspaceFolder}/Warehouse.DAL/Warehouse.DAL.csproj"
+        },
+        {
+            "name": "warehouse-bll",
+            "type": "dotnet",
+            "request": "launch",
+            "projectPath": "${workspaceFolder}/Warehouse.BLL/Warehouse.BLL.csproj"
+        },
+        {
+            "name": "warehouse-api",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "build",
+            "program": "${workspaceFolder}/Warehouse.Api/bin/Debug/net9.0/Warehouse.Api.dll",
+            "args": [],
+            "cwd": "${workspaceFolder}",
+            "stopAtEntry": false,
+            "serverReadyAction": {
+                "action": "openExternally",
+                "pattern": "\\bNow listening on:\\s+(https?://\\S+)"
+            },
+            "env": {
+                "ASPNETCORE_ENVIRONMENT": "Development"
+            },
+            "sourceFileMap": {
+                "/Views": "${workspaceFolder}/Views"
+            }
+        }
+    ]
+}
