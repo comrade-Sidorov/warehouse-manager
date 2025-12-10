@@ -1,16 +1,16 @@
 services:
-  backend-api:
-    container_name: back-api
-    build:
-      context: ./backend/Warehouse.Api
-      dockerfile: Dockerfile
-    ports:
-      - 4000:8080
-    deploy:
-      resources:
-        limits:
-          memory: 512m
-          cpus: '0.1'
+  # backend-api:
+  #   container_name: back-api
+  #   build:
+  #     context: ./backend/Warehouse.Api
+  #     dockerfile: Dockerfile
+  #   ports:
+  #     - 4000:8080
+  #   deploy:
+  #     resources:
+  #       limits:
+  #         memory: 512m
+  #         cpus: '0.1'
 
   # frontend:
   #   container_name: front
@@ -28,6 +28,8 @@ services:
   db:
     container_name: warehouse-db
     image: postgres:latest
+    networks:
+      - app-network
     # ports:
     #   - "15432:5432"
     environment:
@@ -35,8 +37,10 @@ services:
       POSTGRES_PASSWORD: admin
       POSTGRES_DB: postgres
       #PGDATA: /var/lib/postgresql/data/pgdata
-    # volumes:
+    volumes:
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
     #   - ./pgdata:/var/lib/postgresql/data/pgdata
+    
     deploy:
       resources:
         limits:
@@ -61,3 +65,9 @@ services:
     restart: unless-stopped
     tty: true
     stdin_open: true
+
+networks:
+  app-network:
+    name: app-network
+    driver: bridge
+
