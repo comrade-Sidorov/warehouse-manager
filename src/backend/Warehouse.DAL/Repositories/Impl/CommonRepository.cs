@@ -1,10 +1,11 @@
 using Microsoft.EntityFrameworkCore;
 using Warehouse.DAL.Context;
+using Warehouse.DAL.Entities;
 using Warehouse.DAL.Repositories.Interfaces;
 
 namespace Warehouse.DAL.Repositories.Impl;
 
-public class CommonRepository<TEntity> : ICommonRepository<TEntity> where TEntity : class
+public class CommonRepository<TEntity> : ICommonRepository<TEntity> where TEntity : CommonEntity
 {
     private readonly WarehouseDbContext _context;
 
@@ -28,16 +29,18 @@ public class CommonRepository<TEntity> : ICommonRepository<TEntity> where TEntit
         return await _context.Set<TEntity>().ToArrayAsync();
     }
 
-    public async Task<TEntity> GetEntityById(long Id)
+    public async Task<TEntity?> GetEntityById(long id)
     {
-        object id = (object)Id;
-        return await _context.Set<TEntity>().FindAsync(id);
+        return await _context.Set<TEntity>().Where(w => w.Id == id).FirstOrDefaultAsync();
     }
 
-    public async Task Remove(long Id)
+    public async Task Remove(long id)
     {
-        object id = (object)Id;
-        var r = await _context.Set<TEntity>().FindAsync(id);
-        _context.Set<TEntity>().Remove(r);
+        var entity = await _context.Set<TEntity>().Where(w => w.Id == id).FirstOrDefaultAsync();
+        if(entity is not null)
+        {
+            _context.Remove(entity);
+            await _context.SaveChangesAsync();
+        }
     }
 }
