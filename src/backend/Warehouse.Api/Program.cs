@@ -15,6 +15,7 @@ builder.Services.AddControllers();
 var connectionString = builder.Configuration.GetConnectionString("WarehouseConnection");
 builder.Services.AddDbContext<WarehouseDbContext>(options => 
     options.UseNpgsql(connectionString).ConfigureWarnings(wc => wc.Ignore(RelationalEventId.PendingModelChangesWarning)));
+
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 
 builder.Services.AddOpenApi();
@@ -31,6 +32,27 @@ if (app.Environment.IsDevelopment())
         options.SwaggerEndpoint("/swagger/v1/swagger.json", "v1");
         options.RoutePrefix = string.Empty;
     });
+}
+
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    try
+    {
+        var context = services.GetRequiredService<WarehouseDbContext>();
+        var pendingMigrations = context.Database.GetPendingMigrations();
+        if(pendingMigrations.Any())
+        {
+            context.Database.Migrate(); // This applies any pending migrations
+        }
+        
+    }
+    catch (Exception ex)
+    {
+        var logger = services.GetRequiredService<ILogger<Program>>();
+        logger.LogError(ex, "An error occurred while migrating the database.");
+        // Handle error appropriately, e.g., stop the application
+    }
 }
 
 app.UseHttpsRedirection();

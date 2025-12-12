@@ -7,7 +7,7 @@ namespace Warehouse.Api.Controllers;
 [Route("[controller]")]
 public class Test : ControllerBase
 {
-    [HttpGet("test")]
+    [HttpGet]
     public IActionResult TestString([Required][FromQuery] string testString)
     {
         return Ok();
