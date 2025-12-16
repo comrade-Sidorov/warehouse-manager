@@ -1,17 +1,22 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using Warehouse.DAL.Context;
+using Warehouse.DAL.Entities;
 using Warehouse.DAL.Repositories.Interfaces;
 
 namespace Warehouse.DAL.Repositories.Impl;
 
-public class CommonRepository<TEntity> : ICommonRepository<TEntity> where TEntity : class
+public class CommonRepository<TEntity> : ICommonRepository<TEntity> where TEntity : CommonEntity
 {
     private readonly WarehouseDbContext _context;
+    private readonly ILogger<CommonRepository<TEntity>> _logger;
 
     public CommonRepository(
-        WarehouseDbContext context)
+        WarehouseDbContext context,
+        ILogger<CommonRepository<TEntity>> logger)
     {
         _context = context ?? throw new ArgumentNullException(nameof(context));
+        _logger = logger ?? throw new ArgumentNullException(nameof(logger));
     }
     public async Task Create(TEntity entity)
     {
@@ -20,7 +25,6 @@ public class CommonRepository<TEntity> : ICommonRepository<TEntity> where TEntit
             _context.Add(entity);
             await _context.SaveChangesAsync();
         }
-        
     }
 
     public async Task<TEntity[]> GetEntities()
@@ -28,16 +32,18 @@ public class CommonRepository<TEntity> : ICommonRepository<TEntity> where TEntit
         return await _context.Set<TEntity>().ToArrayAsync();
     }
 
-    public async Task<TEntity> GetEntityById(long Id)
+    public async Task<TEntity?> GetEntityById(long id)
     {
-        object id = (object)Id;
-        return await _context.Set<TEntity>().FindAsync(id);
+        _logger.LogInformation($"Get {typeof(TEntity)} by id: {id}");
+        return await _context.Set<TEntity>().Where(w => w.Id == id).FirstOrDefaultAsync();
     }
 
-    public async Task Remove(long Id)
+    public async Task Remove(long id)
     {
-        object id = (object)Id;
-        var r = await _context.Set<TEntity>().FindAsync(id);
-        _context.Set<TEntity>().Remove(r);
+        var entity = await _context.Set<TEntity>().Where(w => w.Id == id).FirstOrDefaultAsync();
+        if(entity is not null)
+        {
+            _context.Set<TEntity>().Remove(entity);
+        }
     }
 }

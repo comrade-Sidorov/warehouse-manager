@@ -1,8 +1,7 @@
 namespace Warehouse.DAL.Entities;
 
-public class Note
+public class Note : CommonEntity
 {
-    public long Id { get; set; }
     public string Value { get; set; } = string.Empty;
     public DateTime ChangedTime { get; set; }
 }
