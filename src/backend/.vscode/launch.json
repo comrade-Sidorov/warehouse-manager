@@ -13,6 +13,12 @@
             "projectPath": "${workspaceFolder}/Warehouse.BLL/Warehouse.BLL.csproj"
         },
         {
+            "name": "warehouse-test",
+            "type": "dotnet",
+            "request": "launch",
+            "projectPath": "${workspaceFolder}/Warehouse.Test/Warehouse.Test.csproj"
+        },
+        {
             "name": "warehouse-api",
             "type": "coreclr",
             "request": "launch",

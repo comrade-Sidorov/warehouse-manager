@@ -6,7 +6,7 @@ namespace Warehouse.DAL.Context;
 public class WarehouseDbContext : DbContext
 {
     DbSet<User> Users { get; set; }
-    DbSet<Note> Notes { get; set; }
+    public DbSet<Note> Notes { get; set; }
     public WarehouseDbContext(DbContextOptions<WarehouseDbContext> options) : base(options)
     { }
 
