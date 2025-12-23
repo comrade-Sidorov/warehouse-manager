@@ -1,5 +1,3 @@
-
-
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Warehouse.BLL.Services.Impl;
@@ -18,7 +16,10 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<ICommonRepository<Note>, CommonRepository<Note>>();
 builder.Services.AddScoped<INoteService, NoteService>();
 
-builder.Services.AddControllers();
+builder.Services.AddControllers().AddJsonOptions(options =>
+{
+    options.JsonSerializerOptions.PropertyNamingPolicy = null;
+});
 
 var connectionString = builder.Configuration.GetConnectionString("WarehouseConnection");
 builder.Services.AddDbContext<WarehouseDbContext>(options => 

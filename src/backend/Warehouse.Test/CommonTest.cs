@@ -1,11 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Moq;
-using Warehouse.BLL.Services.Impl;
 using Warehouse.DAL.Context;
 using Warehouse.DAL.Entities;
 using Warehouse.DAL.Repositories.Impl;
-using Warehouse.DAL.Repositories.Interfaces;
 using Xunit.Abstractions;
 
 namespace Warehouse.Test;
@@ -42,7 +40,7 @@ public class CommonTest
         var mockLogger = new Mock<ILogger<CommonRepository<Note>>>();
        var commonRepo = new CommonRepository<Note>(_context, mockLogger.Object);
 
-       var entities = await commonRepo.GetEntities();
+       var entities = await commonRepo.GetEntitiesAsync();
 
        foreach(var item in entities)
         {

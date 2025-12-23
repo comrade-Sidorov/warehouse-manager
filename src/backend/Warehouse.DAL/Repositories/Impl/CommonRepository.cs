@@ -27,12 +27,12 @@ public class CommonRepository<TEntity> : ICommonRepository<TEntity> where TEntit
         }
     }
 
-    public async Task<TEntity[]> GetEntities()
+    public async Task<TEntity[]> GetEntitiesAsync()
     {
         return await _context.Set<TEntity>().ToArrayAsync();
     }
 
-    public async Task<TEntity?> GetEntityById(long id)
+    public async Task<TEntity?> GetEntityByIdAsync(long id)
     {
         _logger.LogInformation($"Get {typeof(TEntity)} by id: {id}");
         return await _context.Set<TEntity>().Where(w => w.Id == id).FirstOrDefaultAsync();

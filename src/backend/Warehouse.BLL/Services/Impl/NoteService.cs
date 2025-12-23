@@ -1,4 +1,3 @@
-using System.Runtime.CompilerServices;
 using Microsoft.Extensions.Logging;
 using Warehouse.BLL.Services.Interfaces;
 using Warehouse.DAL.Entities;
@@ -20,7 +19,7 @@ public class NoteService : INoteService
     public async Task<string> GetNoteByIdAsync(long id)
     {
         _logger.LogInformation($"Get {nameof(Note)} by id: {id}");
-        var entity = await _noteRepo.GetEntityById(id);
+        var entity = await _noteRepo.GetEntityByIdAsync(id);
         if(entity is null)
         {
             _logger.LogInformation($"Entity by id:{id} not found");
@@ -34,5 +33,14 @@ public class NoteService : INoteService
         }
         
         return entity.Value;
+    }
+
+    public async Task<string[]> GetNotesAsync()
+    {
+        _logger.LogInformation($"Get {nameof(Note)}s");
+        Note[] entities = await _noteRepo.GetEntitiesAsync();
+        string[] notes = entities.Select(s => s.Value).ToArray();
+        return notes;
+        
     }
 }
