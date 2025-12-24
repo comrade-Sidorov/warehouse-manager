@@ -10,25 +10,22 @@ public class NoteService : INoteService
     private readonly ICommonRepository<Note> _noteRepo;
     private readonly ILogger<NoteService> _logger;
 
-    public NoteService(ICommonRepository<Note> noteRepo,
-        ILogger<NoteService> logger)
+    public NoteService(ICommonRepository<Note> noteRepo, ILogger<NoteService> logger)
     {
         _noteRepo = noteRepo ?? throw new ArgumentNullException(nameof(noteRepo));
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
     }
     public async Task<string> GetNoteByIdAsync(long id)
     {
-        _logger.LogInformation($"Get {nameof(Note)} by id: {id}");
+        _logger.LogInformation($"Start {nameof(GetNoteByIdAsync)}");
         var entity = await _noteRepo.GetEntityByIdAsync(id);
         if(entity is null)
         {
-            _logger.LogInformation($"Entity by id:{id} not found");
             return string.Empty;
         }
 
         if(string.IsNullOrEmpty(entity.Value))
         {
-            _logger.LogInformation($"Value is empty");
             return string.Empty;
         }
         
@@ -37,7 +34,6 @@ public class NoteService : INoteService
 
     public async Task<string[]> GetNotesAsync()
     {
-        _logger.LogInformation($"Get {nameof(Note)}s");
         Note[] entities = await _noteRepo.GetEntitiesAsync();
         string[] notes = entities.Select(s => s.Value).ToArray();
         return notes;

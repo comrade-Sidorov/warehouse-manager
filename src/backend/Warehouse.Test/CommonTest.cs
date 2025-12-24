@@ -1,24 +1,19 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using FluentAssertions;
 using Microsoft.Extensions.Logging;
 using Moq;
-using Warehouse.DAL.Context;
+using Warehouse.BLL.Services.Impl;
 using Warehouse.DAL.Entities;
-using Warehouse.DAL.Repositories.Impl;
+using Warehouse.DAL.Repositories.Interfaces;
 using Xunit.Abstractions;
 
 namespace Warehouse.Test;
 
 public class CommonTest
 {
-    private readonly WarehouseDbContext _context;
     private readonly ITestOutputHelper _outputHelper;
     public CommonTest(ITestOutputHelper outputHelper)
     {
-        var optionsBuilder = new DbContextOptionsBuilder<WarehouseDbContext>()
-            .UseNpgsql("Host=172.21.0.2;Port=5432; Username=warehouse; Password=warehouse;Database=warehouse").Options;
-        _context = new WarehouseDbContext(optionsBuilder);
         _outputHelper = outputHelper ?? throw new ArgumentNullException(nameof(outputHelper));
-
     }
     [Fact]
     public void Test1()
@@ -35,19 +30,18 @@ public class CommonTest
     }
 
     [Fact]
-    public async Task Test3()
+    public async Task Test4()
     {
-        var mockLogger = new Mock<ILogger<CommonRepository<Note>>>();
-       var commonRepo = new CommonRepository<Note>(_context, mockLogger.Object);
+        var mockLogger = new Mock<ILogger<NoteService>>();
 
-       var entities = await commonRepo.GetEntitiesAsync();
+        var repo = new Mock<ICommonRepository<Note>>();
+        repo.Setup(r => r.GetEntityByIdAsync(1))
+            .ReturnsAsync(new Note { Id = 1, Value = "draft", ChangedTime = DateTime.UtcNow});
 
-       foreach(var item in entities)
-        {
-            _outputHelper.WriteLine(item.Value);
-            Console.WriteLine(item.Value);
-        }
+        var service = new NoteService(repo.Object, mockLogger.Object);
 
-        Assert.True(entities.Length > 0);
+        var result = await service.GetNoteByIdAsync(1);
+
+        result.Should().NotBeNull();
     }
 }
