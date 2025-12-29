@@ -7,6 +7,10 @@ public class WarehouseDbContext : DbContext
 {
     DbSet<User> Users { get; set; }
     public DbSet<Note> Notes { get; set; }
+    public DbSet<Resource> Resources { get; set; }
+    public DbSet<Measure> Measures { get; set; }
+    public DbSet<AdmissionDocument> AdmissionDocuments { get; set; }
+    public DbSet<AdmissionResource> AdmissionResources { get; set; }
     public WarehouseDbContext(DbContextOptions<WarehouseDbContext> options) : base(options)
     { }
 
@@ -36,6 +40,72 @@ public class WarehouseDbContext : DbContext
                 context.Set<Note>().Add(note);
                 context.SaveChanges();
             }
+
+            if(!context.Set<Resource>().Any())
+            {
+                var resources = new Resource[]
+                {
+                    new Resource
+                    {
+                        Name = "Apple",
+                    },
+
+                   new Resource
+                   {
+                       Name = "Vodka",
+                   },
+
+                   new Resource
+                   {
+                       Name = "Beer",
+                   }
+                };
+
+                context.Set<Resource>().AddRange(resources);
+                context.SaveChanges();
+            }
+
+            if(!context.Set<Measure>().Any())
+            {
+                var measures = new Measure[]
+                {
+                    new Measure
+                    {
+                        Name = "Liter",
+                    },
+
+                    new Measure
+                    {
+                        Name = "Kilogram",
+                    }
+                };
+
+                context.Set<Measure>().AddRange(measures);
+                context.SaveChanges();
+            }
+
+            if(!context.Set<AdmissionDocument>().Any())
+            {
+                var docs = new AdmissionDocument[]
+                {
+                    new AdmissionDocument()
+                    {
+                        Number = 1
+                    },
+
+                    new AdmissionDocument()
+                    {
+                        Number = 2
+                    },
+                    new AdmissionDocument()
+                    {
+                        Number = 3
+                    }
+                };
+
+                context.Set<AdmissionDocument>().AddRange(docs);
+                context.SaveChanges();
+            }
         });
     }
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -62,5 +132,50 @@ public class WarehouseDbContext : DbContext
         modelBuilder.Entity<Note>()
             .Property(p => p.ChangedTime).HasDefaultValue(DateTime.UtcNow).HasColumnName(nameof(Note.ChangedTime));
         
+        modelBuilder.Entity<Resource>().ToTable(nameof(Resources));
+
+        modelBuilder.Entity<Resource>()
+            .HasKey(p => p.Id);
+        modelBuilder.Entity<Resource>()
+            .Property(p => p.Id).HasColumnName(nameof(Resource.Id));
+        modelBuilder.Entity<Resource>()
+            .Property(p => p.Name).HasColumnName(nameof(Resource.Name)).IsRequired();
+        modelBuilder.Entity<Resource>()
+            .Property(p => p.State).HasDefaultValue(0).HasColumnName(nameof(Resource.State));
+        
+        modelBuilder.Entity<Measure>().ToTable(nameof(Measures));
+
+        modelBuilder.Entity<Measure>()
+            .HasKey(p => p.Id);
+        modelBuilder.Entity<Measure>()
+            .Property(p => p.Id).HasColumnName(nameof(Measure.Id));
+        modelBuilder.Entity<Measure>()
+            .Property(p => p.Name).HasColumnName(nameof(Measure.Name));
+        modelBuilder.Entity<Measure>()
+            .Property(p => p.State).HasDefaultValue(0).HasColumnName(nameof(Measure.State));
+        
+        modelBuilder.Entity<AdmissionDocument>().ToTable(nameof(AdmissionDocuments));
+
+        modelBuilder.Entity<AdmissionDocument>()
+            .HasKey(p => p.Id);
+        modelBuilder.Entity<AdmissionDocument>()
+            .Property(p => p.Id).HasColumnName(nameof(AdmissionDocument.Id));
+        modelBuilder.Entity<AdmissionDocument>()
+            .Property(p => p.Number).HasColumnName(nameof(AdmissionDocument.Number));
+        modelBuilder.Entity<AdmissionDocument>()
+            .Property(p => p.Date).HasDefaultValue(DateTime.UtcNow).HasColumnName(nameof(AdmissionDocument.Date));
+        
+        modelBuilder.Entity<AdmissionResource>().ToTable(nameof(AdmissionResources));
+        
+        modelBuilder.Entity<AdmissionResource>()
+            .HasKey(p => p.Id);
+        modelBuilder.Entity<AdmissionResource>()
+            .Property(p => p.Id).HasColumnName(nameof(AdmissionResource.Id));
+        modelBuilder.Entity<AdmissionResource>()
+            .Property(p => p.ResourceId).HasColumnName(nameof(AdmissionResource.ResourceId));
+        modelBuilder.Entity<AdmissionResource>()
+            .Property(p => p.MeasureId).HasColumnName(nameof(AdmissionResource.MeasureId));
+        modelBuilder.Entity<AdmissionResource>()
+            .Property(p => p.Count).HasDefaultValue(0).HasColumnName(nameof(AdmissionResource.Count));
     }
 }
