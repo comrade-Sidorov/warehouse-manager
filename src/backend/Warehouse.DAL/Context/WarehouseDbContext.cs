@@ -106,6 +106,27 @@ public class WarehouseDbContext : DbContext
                 context.Set<AdmissionDocument>().AddRange(docs);
                 context.SaveChanges();
             }
+
+            if(!context.Set<AdmissionResource>().Any())
+            {
+                var admissionResources = new AdmissionResource[]
+                {
+                    new AdmissionResource
+                    {
+                        ResourceId = 1,
+                        MeasureId = 2
+                    },
+
+                    new AdmissionResource
+                    {
+                        ResourceId = 2,
+                        MeasureId = 1
+                    }
+                };
+
+                context.Set<AdmissionResource>().AddRange(admissionResources);
+                context.SaveChanges();
+            }
         });
     }
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -153,6 +174,7 @@ public class WarehouseDbContext : DbContext
             .Property(p => p.Name).HasColumnName(nameof(Measure.Name));
         modelBuilder.Entity<Measure>()
             .Property(p => p.State).HasDefaultValue(0).HasColumnName(nameof(Measure.State));
+        modelBuilder.Entity<Measure>().HasMany(e => e.Resources).WithMany(e => e.Measures).UsingEntity<AdmissionResource>();
         
         modelBuilder.Entity<AdmissionDocument>().ToTable(nameof(AdmissionDocuments));
 
@@ -176,6 +198,6 @@ public class WarehouseDbContext : DbContext
         modelBuilder.Entity<AdmissionResource>()
             .Property(p => p.MeasureId).HasColumnName(nameof(AdmissionResource.MeasureId));
         modelBuilder.Entity<AdmissionResource>()
-            .Property(p => p.Count).HasDefaultValue(0).HasColumnName(nameof(AdmissionResource.Count));
+            .Property(p => p.Count).HasDefaultValue(1).HasColumnName(nameof(AdmissionResource.Count));
     }
 }

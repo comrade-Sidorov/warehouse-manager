@@ -12,8 +12,8 @@ using Warehouse.DAL.Context;
 namespace Warehouse.DAL.Migrations
 {
     [DbContext(typeof(WarehouseDbContext))]
-    [Migration("20251226064246_BaseEntities")]
-    partial class BaseEntities
+    [Migration("20260103074903_Init")]
+    partial class Init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -37,7 +37,7 @@ namespace Warehouse.DAL.Migrations
                     b.Property<DateTime>("Date")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("timestamp with time zone")
-                        .HasDefaultValue(new DateTime(2025, 12, 26, 6, 42, 45, 522, DateTimeKind.Utc).AddTicks(4453))
+                        .HasDefaultValue(new DateTime(2026, 1, 3, 7, 49, 2, 710, DateTimeKind.Utc).AddTicks(5832))
                         .HasColumnName("Date");
 
                     b.Property<int>("Number")
@@ -61,7 +61,7 @@ namespace Warehouse.DAL.Migrations
                     b.Property<int>("Count")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer")
-                        .HasDefaultValue(0)
+                        .HasDefaultValue(1)
                         .HasColumnName("Count");
 
                     b.Property<long>("MeasureId")
@@ -73,6 +73,10 @@ namespace Warehouse.DAL.Migrations
                         .HasColumnName("ResourceId");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("MeasureId");
+
+                    b.HasIndex("ResourceId");
 
                     b.ToTable("AdmissionResources", (string)null);
                 });
@@ -114,7 +118,7 @@ namespace Warehouse.DAL.Migrations
                     b.Property<DateTime>("ChangedTime")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("timestamp with time zone")
-                        .HasDefaultValue(new DateTime(2025, 12, 26, 6, 42, 45, 515, DateTimeKind.Utc).AddTicks(6708))
+                        .HasDefaultValue(new DateTime(2026, 1, 3, 7, 49, 2, 634, DateTimeKind.Utc).AddTicks(8058))
                         .HasColumnName("ChangedTime");
 
                     b.Property<string>("Value")
@@ -171,6 +175,21 @@ namespace Warehouse.DAL.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Users", (string)null);
+                });
+
+            modelBuilder.Entity("Warehouse.DAL.Entities.AdmissionResource", b =>
+                {
+                    b.HasOne("Warehouse.DAL.Entities.Measure", null)
+                        .WithMany()
+                        .HasForeignKey("MeasureId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Warehouse.DAL.Entities.Resource", null)
+                        .WithMany()
+                        .HasForeignKey("ResourceId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }
