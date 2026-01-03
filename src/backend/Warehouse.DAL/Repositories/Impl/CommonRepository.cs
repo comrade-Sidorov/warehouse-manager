@@ -18,7 +18,7 @@ public class CommonRepository<TEntity> : ICommonRepository<TEntity> where TEntit
         _context = context ?? throw new ArgumentNullException(nameof(context));
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
     }
-    public async Task Create(TEntity entity)
+    public async Task CreateAsync(TEntity entity)
     {
         if(entity is not null)
         {
@@ -38,12 +38,18 @@ public class CommonRepository<TEntity> : ICommonRepository<TEntity> where TEntit
         return await _context.Set<TEntity>().Where(w => w.Id == id).FirstOrDefaultAsync();
     }
 
-    public async Task Remove(long id)
+    public async Task RemoveAsync(long id)
     {
         var entity = await _context.Set<TEntity>().Where(w => w.Id == id).FirstOrDefaultAsync();
         if(entity is not null)
         {
             _context.Set<TEntity>().Remove(entity);
+            await _context.SaveChangesAsync();
         }
+    }
+
+    public async Task SaveChangesAsync()
+    {
+        await _context.SaveChangesAsync();
     }
 }

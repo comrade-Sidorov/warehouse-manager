@@ -1,4 +1,5 @@
 using Microsoft.Extensions.Logging;
+using Warehouse.BLL.DTO;
 using Warehouse.BLL.Services.Interfaces;
 using Warehouse.DAL.Entities;
 using Warehouse.DAL.Repositories.Interfaces;
@@ -15,6 +16,34 @@ public class NoteService : INoteService
         _noteRepo = noteRepo ?? throw new ArgumentNullException(nameof(noteRepo));
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
     }
+
+    public async Task CreateAsync(CreateNoteDto dto)
+    {
+        var entity = new Note
+        {
+            Value = dto.Value
+        };
+
+        await _noteRepo.CreateAsync(entity);
+    }
+
+    public async Task DeleteAsync(long id)
+    {
+        await _noteRepo.RemoveAsync(id);
+    }
+
+    public async Task EditAsync(NoteDto dto)
+    {
+        var entity = await _noteRepo.GetEntityByIdAsync(dto.Id);
+
+        if(entity is not null)
+        {
+            entity.Value = dto.Value;
+            await _noteRepo.SaveChangesAsync();
+        }
+        
+    }
+
     public async Task<string> GetNoteByIdAsync(long id)
     {
         _logger.LogInformation($"Start {nameof(GetNoteByIdAsync)}");

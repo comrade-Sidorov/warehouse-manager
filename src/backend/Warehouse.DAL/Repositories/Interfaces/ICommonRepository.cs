@@ -6,6 +6,7 @@ public interface ICommonRepository<TEntity> where TEntity : CommonEntity
 {
     Task<TEntity?> GetEntityByIdAsync(long id);
     Task<TEntity[]> GetEntitiesAsync();
-    Task Create(TEntity entity);
-    Task Remove(long id);
+    Task CreateAsync(TEntity entity);
+    Task RemoveAsync(long id);
+    Task SaveChangesAsync();
 }
