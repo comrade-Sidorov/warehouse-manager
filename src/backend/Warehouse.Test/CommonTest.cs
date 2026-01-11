@@ -26,6 +26,7 @@ public class CommonTest
     public void Test2()
     {
         var r = 2 + 3;
+        // test commit
         Assert.False(r == 4);
     }
 
