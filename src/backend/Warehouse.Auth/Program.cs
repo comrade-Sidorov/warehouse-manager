@@ -28,7 +28,7 @@ consumer.ReceivedAsync += (model, ea) =>
 app.MapGet("/", () => "Hello World!");
 app.MapGet("/hi", async () =>
 {
-    var factory = new ConnectionFactory() { HostName = "rabbitmq", Port = 5672, UserName = "warehouse", Password = "12345" };
+    var factory = new ConnectionFactory() { HostName = "rabbitmq", Port = 15672, UserName = "warehouse", Password = "12345" };
     using var connection = await factory.CreateConnectionAsync();
     using var chanel = await connection.CreateChannelAsync();
 
@@ -83,5 +83,13 @@ public class HiService : BackgroundService
             return Task.CompletedTask;
         };
         _logger.LogInformation(msg);
+        await chanel.BasicConsumeAsync("hello", autoAck: true, consumer: consumer);
+    }
+
+    private async Task ShowMessage(string msg)
+    {
+        _logger.LogTrace("in show string");
+        _logger.LogTrace(msg);
+        await Task.Delay(10);
     }
 }
