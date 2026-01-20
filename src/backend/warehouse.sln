@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Warehouse.DAL", "Warehouse.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Warehouse.Test", "Warehouse.Test\Warehouse.Test.csproj", "{616F752A-4D52-437E-BEFC-366AF3906D1C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Warehouse.Auth", "Warehouse.Auth\Warehouse.Auth.csproj", "{C11B0352-A336-41FD-AB6E-990BCD6ECDE6}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -36,5 +38,9 @@ Global
 		{616F752A-4D52-437E-BEFC-366AF3906D1C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{616F752A-4D52-437E-BEFC-366AF3906D1C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{616F752A-4D52-437E-BEFC-366AF3906D1C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C11B0352-A336-41FD-AB6E-990BCD6ECDE6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C11B0352-A336-41FD-AB6E-990BCD6ECDE6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C11B0352-A336-41FD-AB6E-990BCD6ECDE6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C11B0352-A336-41FD-AB6E-990BCD6ECDE6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

@@ -1,6 +1,6 @@
 services:
-  backend-api:
-    container_name: back-api
+  apigateway:
+    container_name: apigateway
     networks:
       - app-network
     build:
@@ -13,6 +13,34 @@ services:
         limits:
           memory: 512m
           cpus: '0.1'
+  
+  auth-service:
+    container_name: auth-service
+    networks:
+      - app-network
+    build:
+      context: ./backend
+      dockerfile: ./Warehouse.Auth/Dockerfile
+    ports:
+      - 4001:8080
+    deploy:
+      resources:
+        limits:
+          memory: 512m
+          cpus: '0.1'
+  rabbitmq:
+    image: rabbitmq:management
+    container_name: mq
+    networks:
+      - app-network
+    restart: always
+    environment:
+      RABBITMQ_DEFAULT_USER: warehouse
+      RABBITMQ_DEFAULT_PASS: 12345
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    
 
   # frontend:
   #   container_name: front
