@@ -28,6 +28,47 @@ services:
         limits:
           memory: 512m
           cpus: '0.1'
+  
+  auth-db:
+    container_name: auth-db
+    image: postgres:latest
+    networks:
+      - app-network
+    environment:
+      POSTGRES_HOST_AUTH_METHOD: trust
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin
+      POSTGRES_DB: postgres
+      #PGDATA: /var/lib/postgresql/data/pgdata
+    volumes:
+      - ./database/auth-db/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - auth_data:/var/lib/postgresql/data/pgdata
+    
+    deploy:
+      resources:
+        limits:
+          cpus: '0.50'
+          memory: 512M
+        reservations:
+          cpus: '0.25'
+          memory: 256M
+    command: >
+      postgres -c max_connections=1000
+               -c shared_buffers=256MB
+               -c effective_cache_size=768MB
+               -c maintenance_work_mem=64MB
+               -c checkpoint_completion_target=0.7
+               -c wal_buffers=16MB
+               -c default_statistics_target=100
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U admin -d postgres" ]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+    restart: unless-stopped
+    tty: true
+    stdin_open: true
+
   rabbitmq:
     image: rabbitmq:management
     container_name: mq
@@ -40,6 +81,11 @@ services:
     ports:
       - "5672:5672"
       - "15672:15672"
+    deploy:
+      resources:
+        limits:
+          memory: 512m
+          cpus: '0.1'
     
 
   # frontend:
@@ -98,6 +144,8 @@ services:
 volumes:
   postgres_data: 
     name: db-volumes
+  auth_data:
+    name: auth-volumes
 
 networks:
   app-network:
