@@ -3,29 +3,38 @@ using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 
 var builder = WebApplication.CreateBuilder(args);
-builder.Services.AddHostedService<HiService>();
+builder.WebHost.ConfigureKestrel(serverOptions =>
+{
+    serverOptions.ListenAnyIP(5002);
+    //sserverOptions.ListenAnyIP(5003, listenOptions => listenOptions.UseHttps());
+});
+//builder.Services.AddHostedService<HiService>();
 var app = builder.Build();
 
-var factory = new ConnectionFactory() { HostName = "rabbitmq", Port = 5672, UserName = "warehouse", Password = "12345" };
-using var connection = await factory.CreateConnectionAsync();
-using var chanel = await connection.CreateChannelAsync();
+// var factory = new ConnectionFactory() { HostName = "rabbitmq", Port = 5672, UserName = "warehouse", Password = "12345" };
+// using var connection = await factory.CreateConnectionAsync();
+// using var chanel = await connection.CreateChannelAsync();
 
-await chanel.QueueDeclareAsync(queue: "hello", durable: false, exclusive: false, autoDelete: false, arguments: null);
+// await chanel.QueueDeclareAsync(queue: "hello", durable: false, exclusive: false, autoDelete: false, arguments: null);
 
 app.Logger.LogInformation("test");
 
-var consumer = new AsyncEventingBasicConsumer(chanel);
-string  msg = "";
-consumer.ReceivedAsync += (model, ea) =>
-{
-    var body = ea.Body.ToArray();
-    var message = Encoding.UTF8.GetString(body);
-    app.Logger.LogInformation(message);
-    msg = message;
-    return Task.CompletedTask;
-};
+// var consumer = new AsyncEventingBasicConsumer(chanel);
+// string  msg = "";
+// consumer.ReceivedAsync += (model, ea) =>
+// {
+//     var body = ea.Body.ToArray();
+//     var message = Encoding.UTF8.GetString(body);
+//     app.Logger.LogInformation(message);
+//     msg = message;
+//     return Task.CompletedTask;
+// };
 
 app.MapGet("/", () => "Hello World!");
+app.MapPost("/register", () => 
+{
+    return Results.NoContent();
+});
 app.MapGet("/hi", async () =>
 {
     var factory = new ConnectionFactory() { HostName = "rabbitmq", Port = 15672, UserName = "warehouse", Password = "12345" };

@@ -1,9 +1,11 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Warehouse.BLL.DTO;
 using Warehouse.BLL.Services.Interfaces;
 
 namespace Warehouse.Api.Controllers;
 
+[Authorize]
 [ApiController]
 [Route("[controller]")]
 public class NotesController : ControllerBase

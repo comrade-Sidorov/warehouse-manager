@@ -22,7 +22,7 @@ services:
       context: ./backend
       dockerfile: ./Warehouse.Auth/Dockerfile
     ports:
-      - 4001:8080
+      - 4001:5002
     deploy:
       resources:
         limits:

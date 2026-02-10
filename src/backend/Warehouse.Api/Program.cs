@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -5,6 +6,13 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+.AddJwtBearer(jwtoptions =>
+{
+   jwtoptions.Audience = "test";
+   jwtoptions.Authority = "test"; 
+   jwtoptions.RequireHttpsMetadata = false;
+});
 builder.Services.AddControllers();
 builder.Services.AddRouting(options =>
 {
@@ -34,6 +42,7 @@ app.MapOpenApi();
 
 app.UseHttpsRedirection();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
