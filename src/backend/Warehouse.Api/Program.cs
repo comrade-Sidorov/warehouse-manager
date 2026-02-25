@@ -1,18 +1,58 @@
+using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(options =>
+{
+    options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme()
+    {
+        Name = "Authorization",
+        In = ParameterLocation.Header,
+        Type = SecuritySchemeType.Http,
+        Scheme = "Bearer"
+    });
+
+    options.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
+        {
+            new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference
+                {
+                    Type = ReferenceType.SecurityScheme,
+                    Id = "Bearer"
+                }
+            },
+            Array.Empty<string>()
+        }
+    });
+});
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-.AddJwtBearer(jwtoptions =>
+.AddJwtBearer(jwtOptions =>
 {
-   jwtoptions.Audience = "test";
-   jwtoptions.Authority = "test"; 
-   jwtoptions.RequireHttpsMetadata = false;
+//    jwtOptions.Audience = "test";
+//    jwtOptions.Authority = "test"; 
+   jwtOptions.TokenValidationParameters = new TokenValidationParameters
+   {
+       ValidateIssuer = true,
+       ValidateAudience = true,
+       ValidateLifetime = true,
+       ValidateIssuerSigningKey = true,
+       ValidIssuer = "http://localhost:5083",
+       ValidAudience = "http://localhost:5083",
+       IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("very-VERY-very-secret-key-KEY-AAAAAaaaaaa"))
+   };
+
+   jwtOptions.RequireHttpsMetadata = false;
 });
+builder.Services.AddAuthorization();
+
 builder.Services.AddControllers();
 builder.Services.AddRouting(options =>
 {

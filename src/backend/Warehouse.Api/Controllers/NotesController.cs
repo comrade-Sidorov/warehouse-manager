@@ -27,6 +27,7 @@ public class NotesController : ControllerBase
     [HttpGet]
     public async Task<string[]> GetNotes()
     {
+
         return await _noteService.GetNotesAsync();
     }
 
