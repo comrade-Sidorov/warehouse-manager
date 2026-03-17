@@ -36,20 +36,9 @@ builder.Services.AddSwaggerGen(options =>
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 .AddJwtBearer(jwtOptions =>
 {
-//    jwtOptions.Audience = "test";
-//    jwtOptions.Authority = "test"; 
-   jwtOptions.TokenValidationParameters = new TokenValidationParameters
-   {
-       ValidateIssuer = true,
-       ValidateAudience = true,
-       ValidateLifetime = true,
-       ValidateIssuerSigningKey = true,
-       ValidIssuer = "http://localhost:5083",
-       ValidAudience = "http://localhost:5083",
-       IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("very-VERY-very-secret-key-KEY-AAAAAaaaaaa"))
-   };
-
-   jwtOptions.RequireHttpsMetadata = false;
+   jwtoptions.Audience = "http://localhost:5083";
+   //jwtoptions.Authority = "test"; 
+   jwtoptions.RequireHttpsMetadata = false;
 });
 builder.Services.AddAuthorization();
 
@@ -79,7 +68,7 @@ app.MapOpenApi();
         options.SwaggerEndpoint("/swagger/v1/swagger.json", "v1");
         options.RoutePrefix = string.Empty;
     });
-
+//app.MapSwagger().RequireAuthorization();
 app.UseHttpsRedirection();
 
 app.UseAuthentication();
