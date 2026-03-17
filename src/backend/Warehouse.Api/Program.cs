@@ -9,8 +9,8 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 .AddJwtBearer(jwtoptions =>
 {
-   jwtoptions.Audience = "test";
-   jwtoptions.Authority = "test"; 
+   jwtoptions.Audience = "http://localhost:5083";
+   //jwtoptions.Authority = "test"; 
    jwtoptions.RequireHttpsMetadata = false;
 });
 builder.Services.AddControllers();
@@ -39,7 +39,7 @@ app.MapOpenApi();
         options.SwaggerEndpoint("/swagger/v1/swagger.json", "v1");
         options.RoutePrefix = string.Empty;
     });
-
+//app.MapSwagger().RequireAuthorization();
 app.UseHttpsRedirection();
 
 app.UseAuthentication();
