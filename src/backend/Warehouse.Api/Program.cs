@@ -2,7 +2,9 @@ using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Warehouse.Api;
 
+const string AUTH = "Bearer";
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -25,7 +27,7 @@ builder.Services.AddSwaggerGen(options =>
                 Reference = new OpenApiReference
                 {
                     Type = ReferenceType.SecurityScheme,
-                    Id = "Bearer"
+                    Id = AUTH
                 }
             },
             Array.Empty<string>()
@@ -33,14 +35,22 @@ builder.Services.AddSwaggerGen(options =>
     });
 });
 
-builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-.AddJwtBearer(jwtOptions =>
+builder.Services.AddAuthentication(AUTH).AddJwtBearer(AUTH, options =>
 {
-   jwtoptions.Audience = "http://localhost:5083";
-   //jwtoptions.Authority = "test"; 
-   jwtoptions.RequireHttpsMetadata = false;
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuer = true,
+        ValidateAudience = true,
+        ValidateLifetime = true,
+        ValidateIssuerSigningKey = true,
+        ValidIssuer = builder.Configuration["ApiSettings:Issuer"],
+        ValidAudience = builder.Configuration["ApiSettings:Audience"],
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["ApiSettings:Secret"]!))
+    };
 });
+
 builder.Services.AddAuthorization();
+builder.Services.AddScoped<TokenService>();
 
 builder.Services.AddControllers();
 builder.Services.AddRouting(options =>
