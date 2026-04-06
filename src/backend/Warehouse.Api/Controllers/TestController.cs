@@ -6,13 +6,21 @@ using RabbitMQ.Client;
 namespace Warehouse.Api.Controllers;
 
 [ApiController]
-[Route("[controller]")]
-public class Test : ControllerBase
+[Route("api/[controller]")]
+public class TestController : ControllerBase
 {
-    [HttpGet]
-    public IActionResult TestString([Required][FromQuery] string testString)
+    private readonly ILogger<TestController> _loggerTest;
+
+    public TestController(ILogger<TestController> loggerTest)
     {
-        return Ok();
+        _loggerTest = loggerTest ?? throw new ArgumentNullException(nameof(loggerTest));
+    }
+
+    [HttpGet]
+    public ActionResult<string> TestString()
+    {
+        _loggerTest.LogInformation("log from api");
+        return Ok("shit");
     }
 
     [HttpGet("hi")]

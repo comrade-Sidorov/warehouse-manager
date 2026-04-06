@@ -35,6 +35,8 @@ app.MapPost("/register", () =>
 {
     return Results.NoContent();
 });
+
+app.MapGet("api/test", () => "hello from 5002");
 app.MapGet("/hi", async () =>
 {
     var factory = new ConnectionFactory() { HostName = "rabbitmq", Port = 15672, UserName = "warehouse", Password = "12345" };

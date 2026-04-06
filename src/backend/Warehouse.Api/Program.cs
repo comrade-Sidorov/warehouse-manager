@@ -1,5 +1,4 @@
 using System.Text;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Warehouse.Api;
@@ -9,6 +8,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddEndpointsApiExplorer();
+
 builder.Services.AddSwaggerGen(options =>
 {
     options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme()
@@ -37,6 +37,9 @@ builder.Services.AddSwaggerGen(options =>
 
 builder.Services.AddAuthentication(AUTH).AddJwtBearer(AUTH, options =>
 {
+    var t = builder.Configuration["ApiSettings:Issuer"];
+    Console.WriteLine(t);
+    var c = builder.Configuration.GetConnectionString("ConnectionStrings");
     options.TokenValidationParameters = new TokenValidationParameters
     {
         ValidateIssuer = true,
@@ -48,7 +51,7 @@ builder.Services.AddAuthentication(AUTH).AddJwtBearer(AUTH, options =>
         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["ApiSettings:Secret"]!))
     };
 });
-
+builder.Services.AddReverseProxy().LoadFromConfig(builder.Configuration.GetSection("RevereseProxy"));
 builder.Services.AddAuthorization();
 builder.Services.AddScoped<TokenService>();
 
@@ -80,6 +83,7 @@ app.MapOpenApi();
     });
 //app.MapSwagger().RequireAuthorization();
 app.UseHttpsRedirection();
+app.MapReverseProxy();
 
 app.UseAuthentication();
 app.UseAuthorization();
